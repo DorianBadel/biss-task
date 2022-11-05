@@ -5,23 +5,23 @@ const notes = [
   {
     id: 1,
     title: 'Morning Groceries',
-    text: 'I need to pick up some tomatoes and eggs for breakfast.',
+    text: 'I need to pick up some *tomatoes* and eggs for breakfast.',
     lable: 'groceries'
   },
   {
     id: 2,
-    title: 'Morning Groceries',
-    text: 'I need to pick up some tomatoes and eggs for breakfast.',
+    title: '<h3>Test</h3>',
+    text: '> I need\n to pick up some tomatoes and eggs for breakfast.',
     lable: 'groceries'  },
   {
     id: 3,
     title: 'Morning Groceries',
-    text: 'I need to pick up some tomatoes and eggs for breakfast.',
+    text: 'I **need** to pick up some tomatoes and eggs for breakfast.',
     lable: 'groceries'  },
   {
     id: 4,
     title: 'Morning Groceries',
-    text: 'I need to pick up some tomatoes and eggs for breakfast.',
+    text: '([`remark-toc`](https://github.com/remarkjs/remark-toc)). I need to pick up some tomatoes and eggs for breakfast.',
     lable: 'groceries'
   },
   // More products...
