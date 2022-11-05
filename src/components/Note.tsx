@@ -1,4 +1,5 @@
 import React from 'react'
+import Alert from './Alert';
 import Button, { ButtonType } from './Button'
 
 let test = true;
@@ -6,6 +7,7 @@ function Note() {
   return (
     test ?
     <div className="bg-zinc-200 bg-opacity-80 fixed inset-0 z-50   ">
+      <Alert/>
               <div className="flex pt-20 px-20 justify-center items-center">
                   <div className="flex-col min-w-full justify-center min-w- bg-white py-10 px-12 rounded-md ">
 
