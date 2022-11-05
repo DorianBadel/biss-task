@@ -13,9 +13,9 @@ function Button(
 ) {
   return (
     type == ButtonType.regular ?
-      <button className="bg-primary hover:bg-secondary-regular text-white px-3 py-1 text-md font-medium rounded-md shadow"> Add Note </button>
+      <button className="bg-primary hover:bg-secondary-regular text-white px-3 py-1 text-md font-medium rounded-md shadow"> {text} </button>
       :
-      <button className="border border-primary hover:border-secondary-regular hover:text-secondary-regular text-primary px-3 py-1 text-md font-medium rounded-md shadow"> Add Note </button>
+      <button className="border border-primary hover:border-secondary-regular hover:text-secondary-regular text-primary px-3 py-1 text-md font-medium rounded-md shadow"> {text}</button>
   )
 }
 
