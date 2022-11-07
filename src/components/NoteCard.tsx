@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Note } from "./NoteDisplay";
+import { Note } from "../App";
 import NotePreview from "./NotePreview";
 
 const forbid = ["link"];
