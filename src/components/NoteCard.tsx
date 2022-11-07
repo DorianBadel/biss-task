@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
-import Note from './Note';
+import NotePreview from './NotePreview';
 
 
 const forbid = ['link'];
@@ -14,7 +14,7 @@ function NoteCard(
   const [isOpen,setIsOpen] = useState(false);
   return (
     <>
-      {isOpen && <Note callback={setIsOpen}/>}
+      {isOpen && <NotePreview callback={()=>setIsOpen(false)}/>}
       <div key={ID} onClick={()=>setIsOpen(true)} className="group bg-secondary-regular rounded-lg p-5 shadow-md hover:bg-secondary-hover hover:cursor-pointer">
         
         <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg  xl:aspect-w-7 xl:aspect-h-8">

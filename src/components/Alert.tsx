@@ -1,11 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Button, { ButtonType } from './Button'
-import ReactDom from 'react-dom';
 
 
 function Alert({
-  positiveClick,negativeClick,message,positiveOption,negativeOption
-}:{positiveClick:any,negativeClick:any,message:string,positiveOption:string,negativeOption:string}) {
+  positiveClick,
+  negativeClick,
+  message,
+  positiveOption,
+  negativeOption
+}:{
+  positiveClick:React.Dispatch<React.SetStateAction<boolean>>,
+  negativeClick:React.Dispatch<React.SetStateAction<boolean>>,
+  message:string,
+  positiveOption:string,
+  negativeOption:string
+}) {
   return (
     <div className="bg-zinc-200 bg-opacity-70 fixed inset-0 z-50   ">
       
