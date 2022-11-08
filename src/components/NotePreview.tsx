@@ -1,17 +1,26 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Note as NoteT, NotesContext } from "../App";
 import Alert from "./Alert";
 import Note, { NoteType } from "./Note";
 
 function NotePreview({
   callback,
+  thisNote,
 }: {
   callback: React.Dispatch<React.SetStateAction<boolean>>;
+  thisNote: NoteT;
 }) {
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isEditAlertOpen, setIsEditAlertOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [cont, setCont] = useContext(NotesContext);
 
   function onDeleteNote() {
+    setCont(
+      cont.filter((note: NoteT) => {
+        return note.id !== thisNote.id;
+      })
+    );
     setIsAlertOpen(false);
     callback(false);
   }
@@ -32,6 +41,7 @@ function NotePreview({
           type={NoteType.editable}
           actionOnCancel={() => setIsEditAlertOpen(true)}
           actionOnConfirm={onConfirm}
+          noteInfo={thisNote}
         />
       ) : (
         <Note
@@ -39,6 +49,7 @@ function NotePreview({
           actionOnCancel={callback}
           actionOnConfirm={() => setIsEditing(true)}
           actionOnDelete={() => setIsAlertOpen(true)}
+          noteInfo={thisNote}
         />
       )}
 

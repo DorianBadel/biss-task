@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
-import Button, { ButtonType } from "./components/Button";
+import React, { createContext } from "react";
 import Heading from "./components/Heading";
 import NoteDisplay from "./components/NoteDisplay";
 import { useLocalStorage } from "./public/LocalStorage";
@@ -22,8 +21,6 @@ const init: Note = {
 function App() {
   const [lsNotes, setLsNotes] = useLocalStorage("notes", [init]);
 
-  const handleClick = () => {};
-
   return (
     <div className="App">
       <NotesContext.Provider
@@ -34,7 +31,6 @@ function App() {
       >
         <Heading />
         <NoteDisplay />
-        <Button type={ButtonType.border} text="yaa" callback={handleClick} />
       </NotesContext.Provider>
     </div>
   );

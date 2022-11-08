@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import { Note as NoteT, NotesContext } from "../App";
-import { useLocalStorage } from "../public/LocalStorage";
 import Button, { ButtonType } from "./Button";
 import Note, { NoteType } from "./Note";
 

@@ -1,25 +1,13 @@
 import { useState, useEffect } from "react";
 
-type ReturnType<T> = [
-  T | undefined,
-  React.Dispatch<React.SetStateAction<T | undefined>>
-];
-type User = {
-  name: string;
-  surname: string;
-};
-
-const init: User = {
-  name: "ya",
-  surname: "mom",
-};
+type ReturnType<T> = [T, React.Dispatch<React.SetStateAction<T>>];
 
 //<T extends {}>     -> generic
 export const useLocalStorage = <T extends {}>(
   key: string,
   initialValue?: T
 ): ReturnType<T> => {
-  const [state, setState] = useState<T | undefined>(() => {
+  const [state, setState] = useState<T>(() => {
     if (!initialValue) return;
     try {
       const value = localStorage.getItem(key);
