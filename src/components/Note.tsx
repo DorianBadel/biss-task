@@ -1,5 +1,6 @@
-import React from "react";
+import React, { ChangeEvent, useState } from "react";
 import Button, { ButtonType } from "./Button";
+import { Note as NoteT } from "../App";
 
 export enum NoteType {
   editable,
@@ -16,9 +17,27 @@ function Note({
 }: {
   type: NoteType;
   actionOnCancel: React.Dispatch<React.SetStateAction<boolean>>;
-  actionOnConfirm: React.Dispatch<React.SetStateAction<boolean>>;
+  actionOnConfirm: (arg: NoteT) => void;
   actionOnDelete?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const [inputValues, setInputValues] = useState({
+    id: 0,
+    title: "Grocery list",
+    text: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis unde incidunt numquam illum suscipit minima in, nobis, molestiae qui, adipisci pariatur? Aliquid sunt doloribus quasi quos labore et magnam quam.",
+  });
+
+  function handleChange(eventValue: string, name: string) {
+    let newValue = inputValues;
+    name === "noteTitle"
+      ? (newValue.title = eventValue)
+      : (newValue.text = eventValue);
+    setInputValues(newValue);
+  }
+
+  function GetValues() {
+    return inputValues;
+  }
+
   return (
     <>
       <div className="bg-zinc-200 bg-opacity-80 fixed inset-0 z-50">
@@ -45,6 +64,8 @@ function Note({
                   type="text"
                   id="noteTitle"
                   placeholder="Grocery list"
+                  name="noteTitle"
+                  onChange={(e) => handleChange(e.target.value, e.target.name)}
                   className=" my-4 form-control block w-full px-3 py-1.5 text-base font-norma text-gray-70 bg-white bg-clip-paddin border border-solid border-gray-30 rounde transitio ease-in-ou m- focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none"
                 />
 
@@ -56,6 +77,8 @@ function Note({
                 </label>
                 <textarea
                   id="noteText"
+                  name="noteText"
+                  onChange={(e) => handleChange(e.target.value, e.target.name)}
                   placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis unde incidunt numquam illum suscipit minima in, nobis, molestiae qui, adipisci pariatur? Aliquid sunt doloribus quasi quos labore et magnam quam."
                   rows={10}
                   className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none"
@@ -97,7 +120,7 @@ function Note({
                   text={type === NoteType.preview ? "Cancel" : "Discard"}
                 />
                 <Button
-                  callback={() => actionOnConfirm(true)}
+                  callback={() => actionOnConfirm(GetValues())}
                   type={ButtonType.regular}
                   text={type === NoteType.preview ? "Edit" : "Save"}
                 />

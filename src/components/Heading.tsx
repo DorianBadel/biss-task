@@ -1,11 +1,16 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { Note as NoteT, NotesContext } from "../App";
+import { useLocalStorage } from "../public/LocalStorage";
 import Button, { ButtonType } from "./Button";
 import Note, { NoteType } from "./Note";
 
 function Heading() {
   const [openNote, setOpenNote] = useState(false);
+  const [state, setState] = useContext(NotesContext);
 
-  function handleConfirm() {
+  function handleConfirm(value: NoteT) {
+    value.id = state.length + 1;
+    setState(state.concat(value));
     setOpenNote(false);
   }
 

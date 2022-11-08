@@ -11,7 +11,7 @@ export type Note = {
   lable?: string;
 };
 
-export const NotesContext = createContext<Note[] | null>(null);
+export const NotesContext = createContext<Note[] | any>(null);
 
 const init: Note = {
   id: 0,
@@ -26,7 +26,12 @@ function App() {
 
   return (
     <div className="App">
-      <NotesContext.Provider value={lsNotes as Note[]}>
+      <NotesContext.Provider
+        value={[
+          lsNotes as Note[],
+          setLsNotes as React.Dispatch<React.SetStateAction<Note[]>>,
+        ]}
+      >
         <Heading />
         <NoteDisplay />
         <Button type={ButtonType.border} text="yaa" callback={handleClick} />
