@@ -30,7 +30,32 @@ function NotePreview({
     setIsEditing(false);
   }
 
-  function onConfirm() {
+  function findInArray() {
+    return cont.indexOf(cont.find((obj: NoteT) => obj.id === thisNote.id));
+  }
+
+  function onConfirm(val: NoteT) {
+    const indexInArray = findInArray();
+    val.id = thisNote.id;
+    const fruits = cont.slice();
+    fruits.splice(indexInArray, 1, val);
+    setCont(fruits);
+
+    // setCont(
+    //   cont.filter((note: NoteT) => {
+    //     if(note.id === thisNote.id) note = val
+    //     return true;
+    //   })
+    // );
+
+    // setCont(
+    //   cont
+    //     .filter((note: NoteT) => {
+    //       return note.id !== thisNote.id;
+    //     })
+    //     .concat(val)
+    // );
+
     setIsEditing(false);
   }
 

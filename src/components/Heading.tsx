@@ -7,8 +7,16 @@ function Heading() {
   const [openNote, setOpenNote] = useState(false);
   const [state, setState] = useContext(NotesContext);
 
+  function findFirstEmptyIndex() {
+    let emptyId = 1;
+    while (state.find((obj: NoteT) => obj.id === emptyId)) {
+      emptyId++;
+    }
+    return emptyId;
+  }
+
   function handleConfirm(value: NoteT) {
-    value.id = state.length + 1;
+    value.id = findFirstEmptyIndex();
     setState(state.concat(value));
     setOpenNote(false);
   }
