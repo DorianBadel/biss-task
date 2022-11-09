@@ -5,10 +5,10 @@ module.exports = {
   ],
   theme: {
     screens: {
-      'sm': '640px',
+      'sm': '540px',
       'md': '768px',
       'lg': '1080px',
-      '2xl': '1536px'
+      'xl': '1536px'
     },
     extend: {
       colors: {
@@ -17,7 +17,7 @@ module.exports = {
           regular: "#ff8800",
           hover: "#ff9900"
         }
-      }
+      },
     },
   },
   plugins: [],

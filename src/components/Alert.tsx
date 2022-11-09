@@ -1,5 +1,6 @@
 import React from "react";
 import Button, { ButtonType } from "./Button";
+import * as tw from "../public/themes";
 
 function Alert({
   message,
@@ -15,11 +16,11 @@ function Alert({
   negativeClick: () => void;
 }) {
   return (
-    <div className="bg-zinc-200 bg-opacity-70 fixed inset-0 z-50   ">
-      <div className="flex pt-20 h-screen justify-center items-center">
-        <div className="flex-col justify-center min-w- bg-white py-10 px-12 rounded-md ">
-          <div className="text-zinc-600 mb-10 text-lg font-bold">{message}</div>
-          <div className="flex float-right gap-3">
+    <div className={tw.noteModalBackground}>
+      <div className={tw.alertCenter}>
+        <div className={tw.alertContainer}>
+          <div className={tw.noteLgText}>{message}</div>
+          <div className="pt-5 flex float-right gap-3">
             <Button
               callback={negativeClick}
               type={ButtonType.border}

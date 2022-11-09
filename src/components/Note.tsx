@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Button, { ButtonType } from "./Button";
 import ReactMarkdown from "react-markdown";
 import { NoteT } from "../public/ContextProvider";
+import TWNoteWrapper from "./tailwindStyles/TWNotes";
+import * as tw from "../public/themes";
 
 export enum NoteType {
   editable,
@@ -51,112 +53,95 @@ function Note({
 
   return (
     <>
-      <div className="bg-zinc-200 bg-opacity-80 fixed inset-0 z-50">
-        <div className="flex pt-20 px-20 justify-center items-center">
-          <div className="flex-col min-w-full justify-center bg-white py-10 px-12 rounded-md ">
-            <form>
-              <div className="flex justify-between">
-                <label
-                  htmlFor="noteTitle"
-                  className="text-zinc-600 mb-2 text-lg font-bold"
-                >
-                  {type === NoteType.editable
-                    ? "Note title"
-                    : inputValues.title}
-                </label>
-                <div
-                  className="text-primary"
-                  onClick={() => actionOnCancel(false)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 hover:stroke-secondary-hover hover:cursor-pointer transition"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
-
-              {type === NoteType.editable ? (
-                <div>
-                  <input
-                    type="text"
-                    id="noteTitle"
-                    placeholder={inputValues.title}
-                    name="noteTitle"
-                    onChange={handleChange}
-                    defaultValue={inputValues.title}
-                    className=" my-4 form-control block w-full px-3 py-1.5 text-base font-norma text-gray-70 bg-white bg-clip-paddin border border-solid border-gray-30 rounde transitio ease-in-ou m- focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none"
-                  />
-
-                  <label
-                    htmlFor="noteText"
-                    className="text-zinc-600 mb-2 text-lg font-bold block"
-                  >
-                    Note text
-                  </label>
-                  <textarea
-                    id="noteText"
-                    name="noteText"
-                    onChange={(e) => handleChange(e)}
-                    placeholder={inputValues.text}
-                    rows={10}
-                    defaultValue={inputValues.text}
-                    className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none"
-                  />
-                </div>
-              ) : (
-                <ReactMarkdown
-                  className="overflow-auto max-h-72"
-                  children={inputValues.text}
+      <TWNoteWrapper>
+        <form>
+          <div className="flex justify-between">
+            <label htmlFor="noteTitle" className={tw.noteLgText}>
+              {type === NoteType.editable ? "Note title" : inputValues.title}
+            </label>
+            <div className="text-primary" onClick={() => actionOnCancel(false)}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className={tw.noteIcon}
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
-              )}
-            </form>
-
-            <div className="flex justify-between p-2">
-              {type === NoteType.preview ? (
-                actionOnDelete ? (
-                  <Button
-                    callback={() => actionOnDelete(true)}
-                    type={ButtonType.border}
-                    text="Delete"
-                  />
-                ) : (
-                  <Button
-                    callback={() =>
-                      console.log("You forgot to add actionOnDelete")
-                    }
-                    type={ButtonType.border}
-                    text="ADD actionOnDelete"
-                  />
-                )
-              ) : (
-                <div></div>
-              )}
-              <div className="flex float-right gap-3">
-                <Button
-                  callback={() => actionOnCancel(false)}
-                  type={ButtonType.border}
-                  text={type === NoteType.preview ? "Cancel" : "Discard"}
-                />
-                <Button
-                  callback={() => actionOnConfirm(getValues())}
-                  type={ButtonType.regular}
-                  text={type === NoteType.preview ? "Edit" : "Save"}
-                />
-              </div>
+              </svg>
             </div>
           </div>
+
+          {type === NoteType.editable ? (
+            <div>
+              <input
+                type="text"
+                id="noteTitle"
+                placeholder={inputValues.title}
+                name="noteTitle"
+                onChange={handleChange}
+                defaultValue={inputValues.title}
+                className={tw.noteFormInput}
+              />
+
+              <label htmlFor="noteText" className={tw.noteLgText}>
+                Note text
+              </label>
+              <textarea
+                id="noteText"
+                name="noteText"
+                onChange={(e) => handleChange(e)}
+                placeholder={inputValues.text}
+                rows={60}
+                defaultValue={inputValues.text}
+                className={tw.noteFormInput}
+              />
+            </div>
+          ) : (
+            <ReactMarkdown
+              className="overflow-auto max-h-96"
+              children={inputValues.text}
+            />
+          )}
+        </form>
+
+        <div className="flex justify-between p-2 pt-10">
+          {type === NoteType.preview ? (
+            actionOnDelete ? (
+              <Button
+                callback={() => actionOnDelete(true)}
+                type={ButtonType.border}
+                text="Delete"
+              />
+            ) : (
+              <Button
+                callback={() => console.log("You forgot to add actionOnDelete")}
+                type={ButtonType.border}
+                text="ADD actionOnDelete"
+              />
+            )
+          ) : (
+            <div></div>
+          )}
+          <div className="flex float-right gap-3">
+            <Button
+              callback={() => actionOnCancel(false)}
+              type={ButtonType.border}
+              text={type === NoteType.preview ? "Cancel" : "Discard"}
+            />
+            <Button
+              callback={() => actionOnConfirm(getValues())}
+              type={ButtonType.regular}
+              text={type === NoteType.preview ? "Edit" : "Save"}
+            />
+          </div>
         </div>
-      </div>
+      </TWNoteWrapper>
     </>
   );
 }

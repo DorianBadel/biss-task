@@ -15,14 +15,13 @@ function NotePreview({
   const [isEditing, setIsEditing] = useState(false);
   const { ctNotes, setCtNotes } = useContext(NoteContext);
 
+  //ctNotes will always exist if the user gets to this component
   function onDeleteNote() {
-    if (setCtNotes && ctNotes) {
-      setCtNotes(
-        ctNotes.filter((note: NoteT) => {
-          return note.id !== thisNote.id;
-        })
-      );
-    } else console.log("At NotePreview line 27 - No context");
+    setCtNotes(
+      ctNotes!.filter((note: NoteT) => {
+        return note.id !== thisNote.id;
+      })
+    );
 
     setIsAlertOpen(false);
     callback(false);
@@ -34,21 +33,17 @@ function NotePreview({
   }
 
   function findIndexInArray() {
-    const a = ctNotes!.find((obj: NoteT) => obj.id === thisNote.id);
+    const noteInArray = ctNotes!.find((obj: NoteT) => obj.id === thisNote.id);
 
-    return ctNotes!.indexOf(a!);
-
-    //return cont.indexOf(cont.find((obj: NoteT) => obj.id === thisNote.id));
+    return ctNotes!.indexOf(noteInArray!);
   }
 
   function onConfirm(val: NoteT) {
-    if (ctNotes && setCtNotes) {
-      const indexInArray = findIndexInArray();
-      val.id = thisNote.id;
-      const fruits = ctNotes.slice();
-      fruits.splice(indexInArray, 1, val);
-      setCtNotes(fruits);
-    } else console.log("At NotePreview line 49 - No context");
+    const indexInArray = findIndexInArray();
+    val.id = thisNote.id;
+    const fruits = ctNotes!.slice();
+    fruits.splice(indexInArray, 1, val);
+    setCtNotes(fruits);
 
     setIsEditing(false);
   }

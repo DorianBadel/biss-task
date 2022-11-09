@@ -17,7 +17,7 @@ function Button({
   return type === ButtonType.regular ? (
     <button
       onClick={callback}
-      className="bg-primary hover:bg-secondary-regular text-white px-3 py-1 text-md font-medium rounded-md shadow"
+      className="transition bg-primary hover:bg-secondary-regular text-white px-3 py-1 text-md font-medium rounded-md shadow"
     >
       {" "}
       {text}{" "}
@@ -25,7 +25,7 @@ function Button({
   ) : (
     <button
       onClick={callback}
-      className="border border-primary hover:border-secondary-regular hover:text-secondary-regular text-primary px-3 py-1 text-md font-medium rounded-md shadow"
+      className="transition border border-primary hover:border-secondary-regular hover:shadow-xl text-primary px-3 py-1 text-md font-medium rounded-md shadow"
     >
       {" "}
       {text}
