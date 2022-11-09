@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
-import { Note as NoteT, NotesContext } from "../App";
 import Alert from "./Alert";
 import Note, { NoteType } from "./Note";
+import { NoteT, NoteContext } from "../public/ContextProvider";
 
 function NotePreview({
   callback,
@@ -13,14 +13,17 @@ function NotePreview({
   const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [isEditAlertOpen, setIsEditAlertOpen] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [cont, setCont] = useContext(NotesContext);
+  const { ctNotes, setCtNotes } = useContext(NoteContext);
 
   function onDeleteNote() {
-    setCont(
-      cont.filter((note: NoteT) => {
-        return note.id !== thisNote.id;
-      })
-    );
+    if (setCtNotes && ctNotes) {
+      setCtNotes(
+        ctNotes.filter((note: NoteT) => {
+          return note.id !== thisNote.id;
+        })
+      );
+    } else console.log("At NotePreview line 27 - No context");
+
     setIsAlertOpen(false);
     callback(false);
   }
@@ -30,16 +33,22 @@ function NotePreview({
     setIsEditing(false);
   }
 
-  function findInArray() {
-    return cont.indexOf(cont.find((obj: NoteT) => obj.id === thisNote.id));
+  function findIndexInArray() {
+    const a = ctNotes!.find((obj: NoteT) => obj.id === thisNote.id);
+
+    return ctNotes!.indexOf(a!);
+
+    //return cont.indexOf(cont.find((obj: NoteT) => obj.id === thisNote.id));
   }
 
   function onConfirm(val: NoteT) {
-    const indexInArray = findInArray();
-    val.id = thisNote.id;
-    const fruits = cont.slice();
-    fruits.splice(indexInArray, 1, val);
-    setCont(fruits);
+    if (ctNotes && setCtNotes) {
+      const indexInArray = findIndexInArray();
+      val.id = thisNote.id;
+      const fruits = ctNotes.slice();
+      fruits.splice(indexInArray, 1, val);
+      setCtNotes(fruits);
+    } else console.log("At NotePreview line 49 - No context");
 
     // setCont(
     //   cont.filter((note: NoteT) => {

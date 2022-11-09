@@ -1,23 +1,31 @@
 import React, { useContext, useState } from "react";
-import { Note as NoteT, NotesContext } from "../App";
 import Button, { ButtonType } from "./Button";
 import Note, { NoteType } from "./Note";
+import { NoteT, NoteContext } from "../public/ContextProvider";
 
 function Heading() {
   const [openNote, setOpenNote] = useState(false);
-  const [state, setState] = useContext(NotesContext);
+  const { ctNotes, setCtNotes } = useContext(NoteContext);
+  //const [state, setState] = useContext(NotesContext);
 
   function findFirstEmptyIndex() {
     let emptyId = 1;
-    while (state.find((obj: NoteT) => obj.id === emptyId)) {
-      emptyId++;
-    }
+
+    if (ctNotes)
+      while (ctNotes.find((obj: NoteT) => obj.id === emptyId)) {
+        emptyId++;
+      }
+    else console.log("At Heading line 19 - No context");
+
     return emptyId;
   }
 
   function handleConfirm(value: NoteT) {
     value.id = findFirstEmptyIndex();
-    setState(state.concat(value));
+
+    if (ctNotes && setCtNotes) setCtNotes(ctNotes.concat(value));
+    else console.log("At Heading line 27 - No context");
+
     setOpenNote(false);
   }
 

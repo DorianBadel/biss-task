@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Button, { ButtonType } from "./Button";
-import { Note as NoteT } from "../App";
 import ReactMarkdown from "react-markdown";
+import { NoteT } from "../public/ContextProvider";
 
 export enum NoteType {
   editable,

@@ -1,29 +1,17 @@
-import React, { createContext } from "react";
+import React from "react";
 import Heading from "./components/Heading";
 import NoteDisplay from "./components/NoteDisplay";
-import { useLocalStorage } from "./public/LocalStorage";
-
-export type Note = {
-  id: number;
-  title: string;
-  text: string;
-  lable?: string;
-};
-
-export const NotesContext = createContext<Note[] | any>(null);
-
-const init: Note = {
-  id: 0,
-  title: "",
-  text: "",
-};
+import { NoteProvider } from "./public/ContextProvider";
 
 function App() {
-  const [lsNotes, setLsNotes] = useLocalStorage("notes", [init]);
-
   return (
     <div className="App">
-      <NotesContext.Provider
+      <NoteProvider>
+        <Heading />
+        <NoteDisplay />
+      </NoteProvider>
+
+      {/* <NotesContext.Provider
         value={[
           lsNotes as Note[],
           setLsNotes as React.Dispatch<React.SetStateAction<Note[]>>,
@@ -31,7 +19,7 @@ function App() {
       >
         <Heading />
         <NoteDisplay />
-      </NotesContext.Provider>
+      </NotesContext.Provider> */}
     </div>
   );
 }

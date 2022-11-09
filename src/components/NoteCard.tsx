@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Note } from "../App";
 import NotePreview from "./NotePreview";
+import { NoteT } from "../public/ContextProvider";
 
 const forbid = ["link"];
-function NoteCard({ note }: { note: Note }) {
+function NoteCard({ note }: { note: NoteT }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
