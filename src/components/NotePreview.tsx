@@ -50,21 +50,6 @@ function NotePreview({
       setCtNotes(fruits);
     } else console.log("At NotePreview line 49 - No context");
 
-    // setCont(
-    //   cont.filter((note: NoteT) => {
-    //     if(note.id === thisNote.id) note = val
-    //     return true;
-    //   })
-    // );
-
-    // setCont(
-    //   cont
-    //     .filter((note: NoteT) => {
-    //       return note.id !== thisNote.id;
-    //     })
-    //     .concat(val)
-    // );
-
     setIsEditing(false);
   }
 

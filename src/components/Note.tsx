@@ -7,9 +7,6 @@ export enum NoteType {
   editable,
   preview,
 }
-
-//TODO: make actionOnCancel trigger call actionOnCancel(true) if a change has been made
-//Make sure its not overwriten in the component call
 function Note({
   type,
   actionOnCancel,
@@ -44,7 +41,11 @@ function Note({
     setInputValues(newValue);
   }
 
-  function GetValues(): NoteT {
+  function getValues(): NoteT {
+    if (inputValues.title === "") inputValues.title = "Note title";
+    if (inputValues.text === "")
+      inputValues.text =
+        "Placeholder text, yay you forgot to write a note in your note";
     return inputValues;
   }
 
@@ -147,7 +148,7 @@ function Note({
                   text={type === NoteType.preview ? "Cancel" : "Discard"}
                 />
                 <Button
-                  callback={() => actionOnConfirm(GetValues())}
+                  callback={() => actionOnConfirm(getValues())}
                   type={ButtonType.regular}
                   text={type === NoteType.preview ? "Edit" : "Save"}
                 />

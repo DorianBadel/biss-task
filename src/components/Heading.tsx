@@ -6,7 +6,6 @@ import { NoteT, NoteContext } from "../public/ContextProvider";
 function Heading() {
   const [openNote, setOpenNote] = useState(false);
   const { ctNotes, setCtNotes } = useContext(NoteContext);
-  //const [state, setState] = useContext(NotesContext);
 
   function findFirstEmptyIndex() {
     let emptyId = 1;

@@ -1,4 +1,4 @@
-import React, { createContext, FC, ReactNode, useMemo } from "react";
+import React, { createContext, useMemo } from "react";
 import { useLocalStorage } from "./LocalStorage";
 
 export type NoteT = {
@@ -24,7 +24,9 @@ type NoteContextProps = {
   children: React.ReactNode;
 };
 
-export const NoteProvider: FC<NoteContextProps> = ({ children }) => {
+export function NoteProvider({
+  children,
+}: NoteContextProps): React.ReactElement {
   const [ctNotes, setCtNotes] = useLocalStorage<NoteT[]>("note", initState);
 
   const value = useMemo(() => {
@@ -32,4 +34,4 @@ export const NoteProvider: FC<NoteContextProps> = ({ children }) => {
   }, [setCtNotes, ctNotes]);
 
   return <NoteContext.Provider value={value}>{children}</NoteContext.Provider>;
-};
+}
