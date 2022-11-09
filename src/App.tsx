@@ -1,24 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { createContext } from "react";
+import Heading from "./components/Heading";
+import NoteDisplay from "./components/NoteDisplay";
+import { useLocalStorage } from "./public/LocalStorage";
+
+export type Note = {
+  id: number;
+  title: string;
+  text: string;
+  lable?: string;
+};
+
+export const NotesContext = createContext<Note[] | any>(null);
+
+const init: Note = {
+  id: 0,
+  title: "",
+  text: "",
+};
 
 function App() {
+  const [lsNotes, setLsNotes] = useLocalStorage("notes", [init]);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="text-3xl font-bold"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <NotesContext.Provider
+        value={[
+          lsNotes as Note[],
+          setLsNotes as React.Dispatch<React.SetStateAction<Note[]>>,
+        ]}
+      >
+        <Heading />
+        <NoteDisplay />
+      </NotesContext.Provider>
     </div>
   );
 }
