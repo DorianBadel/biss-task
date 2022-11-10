@@ -17,8 +17,10 @@ function Alert({
 }) {
   return (
     <div className={tw.noteModalBackground}>
-      <div className={tw.alertCenter}>
-        <div className={tw.alertContainer}>
+      <div className={tw.alertCenter} onClick={negativeClick}>
+        <div className={tw.alertContainer} onClick={(e)=>{
+          e.stopPropagation()
+        }}>
           <div className={tw.noteLgText}>{message}</div>
           <div className="pt-5 flex float-right gap-3">
             <Button

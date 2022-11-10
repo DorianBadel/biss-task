@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Button, { ButtonType } from "./Button";
 import ReactMarkdown from "react-markdown";
 import { NoteT } from "../public/ContextProvider";
-import TWNoteWrapper from "./tailwindStyles/TWNotes";
 import * as tw from "../public/themes";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
@@ -59,7 +58,11 @@ function Note({
 
   return (
     <>
-      <TWNoteWrapper>
+      <div className={tw.noteModalBackground} >
+        <div className={tw.noteModalCenter} onClick={actionOnCancel} >
+          <div className={tw.noteModalContainer} onClick={(e)=>{
+          e.stopPropagation()
+        }}>
         <form>
           <div className="flex justify-between pb-3">
             <Label name="noteTitle">
@@ -118,7 +121,9 @@ function Note({
             />
           </div>
         </div>
-      </TWNoteWrapper>
+        </div>
+      </div>
+    </div>
     </>
   );
 }
