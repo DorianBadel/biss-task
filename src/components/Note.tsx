@@ -4,6 +4,8 @@ import ReactMarkdown from "react-markdown";
 import { NoteT } from "../public/ContextProvider";
 import TWNoteWrapper from "./tailwindStyles/TWNotes";
 import * as tw from "../public/themes";
+import remarkGfm from "remark-gfm";
+import rehypeHighlight from "rehype-highlight";
 
 export enum NoteType {
   editable,
@@ -105,6 +107,8 @@ function Note({
           ) : (
             <ReactMarkdown
               className="overflow-auto max-h-96"
+              rehypePlugins={[rehypeHighlight]}
+              remarkPlugins={[remarkGfm]}
               children={inputValues.text}
             />
           )}

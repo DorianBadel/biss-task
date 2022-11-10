@@ -3,6 +3,8 @@ import ReactMarkdown from "react-markdown";
 import NotePreview from "./NotePreview";
 import { NoteT } from "../public/ContextProvider";
 import * as tw from "../public/themes";
+import rehypeHighlight from "rehype-highlight";
+import remarkGfm from "remark-gfm";
 
 const forbid = ["link"];
 function NoteCard({ note }: { note: NoteT }) {
@@ -20,9 +22,9 @@ function NoteCard({ note }: { note: NoteT }) {
         <div className={tw.noteCard}>
           <p className={tw.noteXlText + " mb-2"}>{note.title}</p>
           <ReactMarkdown
-            className={tw.noteMdText}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeHighlight]}
             children={note.text}
-            disallowedElements={forbid}
           />
         </div>
       </div>
