@@ -9,24 +9,32 @@ export type NoteT = {
 };
 
 const initState: NoteT[] = [];
+const initLabels: string[] = [];
 
 type NoteTContext = {
   ctNotes: NoteT[] | undefined;
   setCtNotes: (newVal: NoteT[] | ((prevVal: NoteT[]) => NoteT[])) => void;
 };
 
+type stringStateT = {
+  ctLabels: string[] | undefined;
+  setCtLabels: (newVal: string[] | ((prevVal: string[]) => string[])) => void;
+
+}
+
 export const NoteContext = createContext<NoteTContext>({
   ctNotes: initState,
   setCtNotes: () => {},
 });
 
-type NoteContextProps = {
-  children: React.ReactNode;
-};
+export const LabelContext = createContext<stringStateT>({
+  ctLabels: initLabels,
+  setCtLabels: ()=>{}
+})
 
 export function NoteProvider({
   children,
-}: NoteContextProps): React.ReactElement {
+}:{children:React.ReactNode}): React.ReactElement {
   const [ctNotes, setCtNotes] = useLocalStorage<NoteT[]>("notes", initState);
 
   const value = useMemo(() => {
@@ -35,3 +43,16 @@ export function NoteProvider({
 
   return <NoteContext.Provider value={value}>{children}</NoteContext.Provider>;
 }
+
+export function LabelProvider({
+  children,
+}:{children:React.ReactNode}): React.ReactElement {
+  const [ctLabels, setCtLabels] = useLocalStorage<string[]>("labels",initLabels);
+  
+  const value = useMemo(()=>{
+    return { ctLabels, setCtLabels };
+  },[ctLabels, setCtLabels])
+
+  return <LabelContext.Provider value={value}>{children}</LabelContext.Provider>
+}
+

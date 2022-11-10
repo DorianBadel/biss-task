@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
 import Button, { ButtonType } from "./Button";
 import Note, { NoteType } from "./Note";
-import { NoteT, NoteContext } from "../public/ContextProvider";
+import { NoteT, NoteContext, LabelContext } from "../public/ContextProvider";
 
 function Heading() {
   const [openNote, setOpenNote] = useState(false);
   const { ctNotes, setCtNotes } = useContext(NoteContext);
+  const { ctLabels, setCtLabels } = useContext(LabelContext);
 
   function findFirstEmptyIndex() {
     let emptyId = 0;
@@ -18,10 +19,20 @@ function Heading() {
     return emptyId;
   }
 
-  function onConfirm(value: NoteT) {
-    value.id = findFirstEmptyIndex();
+  function addLabelToContext(label:string){
+    if(label == "") return undefined;
+    else if(!ctLabels!.includes(label)){
+      setCtLabels(ctLabels!.concat(label));
+    }
+    return label;
+  }
 
-    if (ctNotes && setCtNotes) setCtNotes(ctNotes.concat(value));
+  function onConfirm(val: NoteT) {
+    val.id = findFirstEmptyIndex();
+
+    if(val.label) val.label = addLabelToContext(val.label);
+
+    if (ctNotes && setCtNotes) setCtNotes(ctNotes.concat(val));
 
     setOpenNote(false);
   }

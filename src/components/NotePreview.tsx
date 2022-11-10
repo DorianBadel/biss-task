@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import Alert from "./Alert";
 import Note, { NoteType } from "./Note";
-import { NoteT, NoteContext } from "../public/ContextProvider";
+import { NoteT, NoteContext, LabelContext } from "../public/ContextProvider";
 
 enum alert{
   none,
@@ -18,14 +18,27 @@ function NotePreview({
   const [openAlert, setOpenAlert] = useState(alert.none);
   const [isEditing, setIsEditing] = useState(false);
   const { ctNotes, setCtNotes } = useContext(NoteContext);
+  const { ctLabels, setCtLabels } = useContext(LabelContext);
 
   //ctNotes will always exist if the user gets to this component
+  function deleteExcessLabels(){
+    if(thisNote.label)
+      if(!ctNotes!.some(obj => obj.label === thisNote.label && obj.id !== thisNote.id)) 
+        setCtLabels(
+          ctLabels!.filter((label: string) => {
+            return label !== thisNote.label
+        }))
+  }
+
   function onDeleteNote() {
     setCtNotes(
       ctNotes!.filter((note: NoteT) => {
         return note.id !== thisNote.id;
       })
     );
+
+    //Deleting the label if there are no more notes with that label
+    deleteExcessLabels();    
     callback();
 
     setOpenAlert(alert.none);
@@ -42,12 +55,29 @@ function NotePreview({
     return ctNotes!.indexOf(noteInArray!);
   }
 
+  //Add the label to the context if it isn't already there
+  function addLabelToContext(label:string){
+    if(label == "") return undefined;
+    else if(!ctLabels!.includes(label)){
+      setCtLabels(ctLabels!.concat(label));
+    }
+    return label;
+
+  }
+
   function onConfirm(val: NoteT) {
+    //Replace the value in notes
     const indexInArray = findIndexInArray();
     val.id = thisNote.id;
     const tempState = ctNotes!.slice();
+
+    if(val.label && val.label !== thisNote.label) val.label = addLabelToContext(val.label);
+
+    deleteExcessLabels();
+
     tempState.splice(indexInArray, 1, val);
     setCtNotes(tempState);
+    
 
     setIsEditing(false);
   }

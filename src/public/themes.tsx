@@ -34,3 +34,10 @@ export const noteIcon =
 //Buttons
 export const regularButton = "transition bg-primary hover:bg-secondary-regular text-white px-3 py-1 text-md font-medium rounded-md shadow"
 export const borderButton ="transition border border-primary hover:border-secondary-regular hover:shadow-xl text-primary px-3 py-1 text-md font-medium rounded-md shadow"
+
+//Labels
+export const labelTitleSm = "text-lg bg-primary text-white px-3 py-1 text-md font-medium rounded-md shadow"
+
+export const labelTitle = "text-lg bg-primary text-white mx-3 my-1 px-2 text-md font-medium rounded-md shadow w-fit"
+
+export const selectorEnabled = "inline p-1 text-sm text-gray-900 rounded-lg border border-primary focus:ring-primary focus:border-primary "

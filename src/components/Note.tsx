@@ -9,6 +9,7 @@ import Label from "./inputComponents/Label";
 import CloseButton from "./inputComponents/CloseButton";
 import Input from "./inputComponents/Input";
 import TextArea from "./inputComponents/TextArea";
+import LabelSelector from "./LabelSelector";
 
 export enum NoteType {
   editable,
@@ -33,6 +34,7 @@ function Note({
     text: noteInfo
       ? noteInfo.text
       : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis unde incidunt numquam illum suscipit minima in, nobis, molestiae qui, adipisci pariatur? Aliquid sunt doloribus quasi quos labore et magnam quam.",
+    label: noteInfo ? noteInfo.label : undefined
   });
 
   function handleChange(
@@ -45,6 +47,14 @@ function Note({
     event.target.name === "noteTitle"
       ? (newValue.title = event.target.value)
       : (newValue.text = event.target.value);
+    setInputValues(newValue);
+  }
+
+  function handleLabel(event:React.ChangeEvent<HTMLInputElement>){
+    let newValue = inputValues;
+    event.preventDefault();
+    if(event.target.value === "Without label") newValue.label = "";
+    else newValue.label = event.target.value;
     setInputValues(newValue);
   }
 
@@ -73,12 +83,21 @@ function Note({
 
           {type === NoteType.editable ? (
             <div>
-              <Input name="noteTitle" text={inputValues.title} handleChange={handleChange}/>
+              <Input name="noteTitle" text={inputValues.title} handleChange={handleChange} />
+              
+              <div className="py-3">
+                <LabelSelector name="noteLabel" defaultText={inputValues.label ? inputValues.label : "Select label"}
+                handleChange={handleLabel}/>
+              </div>
 
               <Label name="noteText">
                 Note text
               </Label>
               <TextArea name="noteText" text={inputValues.text} handleChange={handleChange}/>
+
+              <Label name="noteText">
+                Note text
+              </Label>
             </div>
           ) : (
             <ReactMarkdown
