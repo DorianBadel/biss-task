@@ -1,4 +1,5 @@
 import React from "react";
+import * as tw from "../public/themes"
 
 export enum ButtonType {
   regular,
@@ -17,17 +18,15 @@ function Button({
   return type === ButtonType.regular ? (
     <button
       onClick={callback}
-      className="transition bg-primary hover:bg-secondary-regular text-white px-3 py-1 text-md font-medium rounded-md shadow"
+      className={tw.regularButton}
     >
-      {" "}
-      {text}{" "}
+      {text}
     </button>
   ) : (
     <button
       onClick={callback}
-      className="transition border border-primary hover:border-secondary-regular hover:shadow-xl text-primary px-3 py-1 text-md font-medium rounded-md shadow"
+      className={tw.borderButton}
     >
-      {" "}
       {text}
     </button>
   );

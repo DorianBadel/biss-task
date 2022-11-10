@@ -30,3 +30,7 @@ export const noteFormInput =
   "form-control block w-full max-h-80 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none";
 export const noteIcon =
   " w-6 h-6 hover:stroke-secondary-hover hover:cursor-pointer transition";
+
+//Buttons
+export const regularButton = "transition bg-primary hover:bg-secondary-regular text-white px-3 py-1 text-md font-medium rounded-md shadow"
+export const borderButton ="transition border border-primary hover:border-secondary-regular hover:shadow-xl text-primary px-3 py-1 text-md font-medium rounded-md shadow"

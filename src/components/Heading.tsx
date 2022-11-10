@@ -8,13 +8,12 @@ function Heading() {
   const { ctNotes, setCtNotes } = useContext(NoteContext);
 
   function findFirstEmptyIndex() {
-    let emptyId = 1;
+    let emptyId = 0;
 
     if (ctNotes)
       while (ctNotes.find((obj: NoteT) => obj.id === emptyId)) {
         emptyId++;
-      }
-    else console.log("At Heading line 19 - No context");
+    }
 
     return emptyId;
   }
@@ -23,7 +22,6 @@ function Heading() {
     value.id = findFirstEmptyIndex();
 
     if (ctNotes && setCtNotes) setCtNotes(ctNotes.concat(value));
-    else console.log("At Heading line 27 - No context");
 
     setOpenNote(false);
   }

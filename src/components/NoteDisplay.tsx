@@ -12,7 +12,7 @@ function NoteDisplay() {
         {ctNotes &&
           ctNotes.map(
             (note: NoteT) =>
-              note.id !== 0 && <NoteCard key={note.id} note={note} />
+              <NoteCard key={note.id} note={note} />
           )}
       </div>
     </div>
