@@ -19,7 +19,7 @@ function Heading() {
     return emptyId;
   }
 
-  function handleConfirm(value: NoteT) {
+  function onConfirm(value: NoteT) {
     value.id = findFirstEmptyIndex();
 
     if (ctNotes && setCtNotes) setCtNotes(ctNotes.concat(value));
@@ -28,13 +28,17 @@ function Heading() {
     setOpenNote(false);
   }
 
+  function onCancel(){
+    setOpenNote(false)
+  }
+
   return (
     <div className="group shadow px-5 py-3 flex justify-between">
       {openNote && (
         <Note
           type={NoteType.editable}
-          actionOnCancel={setOpenNote}
-          actionOnConfirm={handleConfirm}
+          actionOnCancel={onCancel}
+          actionOnConfirm={onConfirm}
         />
       )}
 

@@ -10,16 +10,6 @@ function App() {
         <Heading />
         <NoteDisplay />
       </NoteProvider>
-
-      {/* <NotesContext.Provider
-        value={[
-          lsNotes as Note[],
-          setLsNotes as React.Dispatch<React.SetStateAction<Note[]>>,
-        ]}
-      >
-        <Heading />
-        <NoteDisplay />
-      </NotesContext.Provider> */}
     </div>
   );
 }

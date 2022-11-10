@@ -27,7 +27,7 @@ type NoteContextProps = {
 export function NoteProvider({
   children,
 }: NoteContextProps): React.ReactElement {
-  const [ctNotes, setCtNotes] = useLocalStorage<NoteT[]>("note", initState);
+  const [ctNotes, setCtNotes] = useLocalStorage<NoteT[]>("notes", initState);
 
   const value = useMemo(() => {
     return { ctNotes, setCtNotes };

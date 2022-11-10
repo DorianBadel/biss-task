@@ -3,15 +3,19 @@ import Alert from "./Alert";
 import Note, { NoteType } from "./Note";
 import { NoteT, NoteContext } from "../public/ContextProvider";
 
+enum alert{
+  none,
+  deleteAlert,
+  discardAlert
+}
 function NotePreview({
   callback,
   thisNote,
 }: {
-  callback: React.Dispatch<React.SetStateAction<boolean>>;
+  callback:()=>void;
   thisNote: NoteT;
 }) {
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [isEditAlertOpen, setIsEditAlertOpen] = useState(false);
+  const [openAlert, setOpenAlert] = useState(alert.none);
   const [isEditing, setIsEditing] = useState(false);
   const { ctNotes, setCtNotes } = useContext(NoteContext);
 
@@ -22,13 +26,13 @@ function NotePreview({
         return note.id !== thisNote.id;
       })
     );
+    callback();
 
-    setIsAlertOpen(false);
-    callback(false);
+    setOpenAlert(alert.none);
   }
 
   function onDiscardChanges() {
-    setIsEditAlertOpen(false);
+    setOpenAlert(alert.none);
     setIsEditing(false);
   }
 
@@ -41,9 +45,9 @@ function NotePreview({
   function onConfirm(val: NoteT) {
     const indexInArray = findIndexInArray();
     val.id = thisNote.id;
-    const fruits = ctNotes!.slice();
-    fruits.splice(indexInArray, 1, val);
-    setCtNotes(fruits);
+    const tempState = ctNotes!.slice();
+    tempState.splice(indexInArray, 1, val);
+    setCtNotes(tempState);
 
     setIsEditing(false);
   }
@@ -53,7 +57,7 @@ function NotePreview({
       {isEditing ? (
         <Note
           type={NoteType.editable}
-          actionOnCancel={() => setIsEditAlertOpen(true)}
+          actionOnCancel={()=>setOpenAlert(alert.discardAlert)}
           actionOnConfirm={onConfirm}
           noteInfo={thisNote}
         />
@@ -62,25 +66,25 @@ function NotePreview({
           type={NoteType.preview}
           actionOnCancel={callback}
           actionOnConfirm={() => setIsEditing(true)}
-          actionOnDelete={() => setIsAlertOpen(true)}
+          actionOnDelete={() => setOpenAlert(alert.deleteAlert)}
           noteInfo={thisNote}
         />
       )}
 
-      {isAlertOpen && (
+      {openAlert == alert.deleteAlert && (
         <Alert
           positiveClick={onDeleteNote}
-          negativeClick={() => setIsAlertOpen(false)}
+          negativeClick={() => setOpenAlert(alert.none)}
           message="Are you sure you want to delete this note?"
           positiveOption="Yes, delete"
           negativeOption="Cancel"
         />
       )}
 
-      {isEditAlertOpen && (
+      {openAlert == alert.discardAlert && (
         <Alert
           positiveClick={onDiscardChanges}
-          negativeClick={() => setIsEditAlertOpen(false)}
+          negativeClick={() => setOpenAlert(alert.none)}
           message="Are you sure you want to discard your changes?"
           positiveOption="Yes, discard"
           negativeOption="Continue editing"

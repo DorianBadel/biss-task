@@ -6,13 +6,15 @@ import * as tw from "../public/themes";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
 
-const forbid = ["link"];
 function NoteCard({ note }: { note: NoteT }) {
   const [isOpen, setIsOpen] = useState(false);
+  function stuff(){
+    setIsOpen(false)
+  }
   return (
     <>
       {isOpen && (
-        <NotePreview thisNote={note} callback={() => setIsOpen(false)} />
+        <NotePreview thisNote={note} callback={stuff} />
       )}
       <div
         key={note.id}

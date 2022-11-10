@@ -6,6 +6,10 @@ import TWNoteWrapper from "./tailwindStyles/TWNotes";
 import * as tw from "../public/themes";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
+import Label from "./inputComponents/Label";
+import CloseButton from "./inputComponents/CloseButton";
+import Input from "./inputComponents/Input";
+import TextArea from "./inputComponents/TextArea";
 
 export enum NoteType {
   editable,
@@ -19,9 +23,9 @@ function Note({
   noteInfo,
 }: {
   type: NoteType;
-  actionOnCancel: React.Dispatch<React.SetStateAction<boolean>>;
+  actionOnCancel: ()=>void;
   actionOnConfirm: (arg: NoteT) => void;
-  actionOnDelete?: React.Dispatch<React.SetStateAction<boolean>>;
+  actionOnDelete?: ()=>void;
   noteInfo?: NoteT;
 }) {
   const [inputValues, setInputValues] = useState<NoteT>({
@@ -57,52 +61,21 @@ function Note({
     <>
       <TWNoteWrapper>
         <form>
-          <div className="flex justify-between">
-            <label htmlFor="noteTitle" className={tw.noteLgText}>
+          <div className="flex justify-between pb-3">
+            <Label name="noteTitle">
               {type === NoteType.editable ? "Note title" : inputValues.title}
-            </label>
-            <div className="text-primary" onClick={() => actionOnCancel(false)}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth={1.5}
-                stroke="currentColor"
-                className={tw.noteIcon}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
+            </Label>
+            <CloseButton action={actionOnCancel}/>
           </div>
 
           {type === NoteType.editable ? (
             <div>
-              <input
-                type="text"
-                id="noteTitle"
-                placeholder={inputValues.title}
-                name="noteTitle"
-                onChange={handleChange}
-                defaultValue={inputValues.title}
-                className={tw.noteFormInput}
-              />
+              <Input name="noteTitle" text={inputValues.title} handleChange={handleChange}/>
 
-              <label htmlFor="noteText" className={tw.noteLgText}>
+              <Label name="noteText">
                 Note text
-              </label>
-              <textarea
-                id="noteText"
-                name="noteText"
-                onChange={(e) => handleChange(e)}
-                placeholder={inputValues.text}
-                rows={60}
-                defaultValue={inputValues.text}
-                className={tw.noteFormInput}
-              />
+              </Label>
+              <TextArea name="noteText" text={inputValues.text} handleChange={handleChange}/>
             </div>
           ) : (
             <ReactMarkdown
@@ -118,7 +91,7 @@ function Note({
           {type === NoteType.preview ? (
             actionOnDelete ? (
               <Button
-                callback={() => actionOnDelete(true)}
+                callback={actionOnDelete}
                 type={ButtonType.border}
                 text="Delete"
               />
@@ -134,7 +107,7 @@ function Note({
           )}
           <div className="flex float-right gap-3">
             <Button
-              callback={() => actionOnCancel(false)}
+              callback={actionOnCancel}
               type={ButtonType.border}
               text={type === NoteType.preview ? "Cancel" : "Discard"}
             />
