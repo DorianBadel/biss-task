@@ -23,18 +23,30 @@ function Note({
   noteInfo,
 }: {
   type: NoteType;
-  actionOnCancel: ()=>void;
+  actionOnCancel: () => void;
   actionOnConfirm: (arg: NoteT) => void;
-  actionOnDelete?: ()=>void;
+  actionOnDelete?: () => void;
   noteInfo?: NoteT;
 }) {
+  //Variables
+  //name props of inputs
+  const textInputNameValue = "noteText";
+  const titleInputNameValue = "noteTitle";
+  const labelInputNameValue = "noteLabel";
+
+  //Default values
+  const defaultTitle = "Note title";
+  const defaultTitleTitle = "Note title*";
+  const defaultTextTitle = "Note text*";
+  const defaultText = "Placeholder text, write something of note in your note";
+  const defaultLabel = "Select label";
+  const labelBlankValue = "Without label";
+
   const [inputValues, setInputValues] = useState<NoteT>({
     id: noteInfo ? noteInfo.id : 0,
-    title: noteInfo ? noteInfo.title : "Note title",
-    text: noteInfo
-      ? noteInfo.text
-      : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis unde incidunt numquam illum suscipit minima in, nobis, molestiae qui, adipisci pariatur? Aliquid sunt doloribus quasi quos labore et magnam quam.",
-    label: noteInfo ? noteInfo.label : undefined
+    title: noteInfo ? noteInfo.title : defaultTitle,
+    text: noteInfo ? noteInfo.text : defaultText,
+    label: noteInfo ? noteInfo.label : undefined,
   });
 
   function handleChange(
@@ -44,105 +56,104 @@ function Note({
   ) {
     let newValue = inputValues;
     event.preventDefault();
-    event.target.name === "noteTitle"
+    event.target.name === titleInputNameValue
       ? (newValue.title = event.target.value)
-      : (newValue.text = event.target.value);
-    setInputValues(newValue);
-  }
-
-  function handleLabel(event:React.ChangeEvent<HTMLInputElement>){
-    let newValue = inputValues;
-    event.preventDefault();
-    if(event.target.value === "Without label") newValue.label = "";
-    else newValue.label = event.target.value;
+      : event.target.name === textInputNameValue
+      ? (newValue.text = event.target.value)
+      : event.target.value === labelBlankValue
+      ? (newValue.label = "")
+      : (newValue.label = event.target.value);
     setInputValues(newValue);
   }
 
   function getValues(): NoteT {
-    if (inputValues.title === "") inputValues.title = "Note title";
-    if (inputValues.text === "")
-      inputValues.text =
-        "Placeholder text, yay you forgot to write a note in your note";
+    //In case the user left something blank
+    if (inputValues.title === "") inputValues.title = defaultTitle;
+    if (inputValues.text === "") inputValues.text = defaultText;
     return inputValues;
   }
 
   return (
     <>
-      <div className={tw.noteModalBackground} >
-        <div className={tw.noteModalCenter} onClick={actionOnCancel} >
-          <div className={tw.noteModalContainer} onClick={(e)=>{
-          e.stopPropagation()
-        }}>
-        <form>
-          <div className="flex justify-between pb-3">
-            <Label name="noteTitle">
-              {type === NoteType.editable ? "Note title" : inputValues.title}
-            </Label>
-            <CloseButton action={actionOnCancel}/>
-          </div>
-
-          {type === NoteType.editable ? (
-            <div>
-              <Input name="noteTitle" text={inputValues.title} handleChange={handleChange} />
-              
-              <div className="py-3">
-                <LabelSelector name="noteLabel" defaultText={inputValues.label ? inputValues.label : "Select label"}
-                handleChange={handleLabel}/>
+      <div className={tw.noteModalBackground}>
+        <div className={tw.noteModalCenter} onClick={actionOnCancel}>
+          <div
+            className={tw.noteModalContainer}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <form>
+              <div className="flex justify-between pb-3">
+                <Label name={titleInputNameValue}>
+                  {type === NoteType.editable
+                    ? defaultTitleTitle
+                    : inputValues.title}
+                </Label>
+                <CloseButton action={actionOnCancel} />
               </div>
 
-              <Label name="noteText">
-                Note text
-              </Label>
-              <TextArea name="noteText" text={inputValues.text} handleChange={handleChange}/>
+              {type === NoteType.editable ? (
+                <div>
+                  <Input
+                    name={titleInputNameValue}
+                    text={inputValues.title}
+                    handleChange={handleChange}
+                  />
 
-              <Label name="noteText">
-                Note text
-              </Label>
+                  <div className="py-3">
+                    <LabelSelector
+                      name={labelInputNameValue}
+                      defaultText={
+                        inputValues.label ? inputValues.label : defaultLabel
+                      }
+                      handleChange={handleChange}
+                    />
+                  </div>
+
+                  <Label name={textInputNameValue}>{defaultTextTitle}</Label>
+                  <TextArea
+                    name={textInputNameValue}
+                    text={inputValues.text}
+                    handleChange={handleChange}
+                  />
+                </div>
+              ) : (
+                <ReactMarkdown
+                  className="overflow-auto max-h-96"
+                  rehypePlugins={[rehypeHighlight]}
+                  remarkPlugins={[remarkGfm]}
+                  children={inputValues.text}
+                />
+              )}
+            </form>
+
+            <div className="flex justify-between p-2 pt-10">
+              {type === NoteType.preview && actionOnDelete ? (
+                <Button
+                  callback={actionOnDelete}
+                  type={ButtonType.border}
+                  text="Delete"
+                />
+              ) : (
+                <div></div>
+              )}
+              <div className="flex float-right gap-3">
+                <Button
+                  callback={actionOnCancel}
+                  type={ButtonType.border}
+                  text={type === NoteType.preview ? "Cancel" : "Discard"}
+                />
+                <Button
+                  callback={() => actionOnConfirm(getValues())}
+                  type={ButtonType.regular}
+                  text={type === NoteType.preview ? "Edit" : "Save"}
+                />
+              </div>
             </div>
-          ) : (
-            <ReactMarkdown
-              className="overflow-auto max-h-96"
-              rehypePlugins={[rehypeHighlight]}
-              remarkPlugins={[remarkGfm]}
-              children={inputValues.text}
-            />
-          )}
-        </form>
-
-        <div className="flex justify-between p-2 pt-10">
-          {type === NoteType.preview ? (
-            actionOnDelete ? (
-              <Button
-                callback={actionOnDelete}
-                type={ButtonType.border}
-                text="Delete"
-              />
-            ) : (
-              <Button
-                callback={() => console.log("You forgot to add actionOnDelete")}
-                type={ButtonType.border}
-                text="ADD actionOnDelete"
-              />
-            )
-          ) : (
-            <div></div>
-          )}
-          <div className="flex float-right gap-3">
-            <Button
-              callback={actionOnCancel}
-              type={ButtonType.border}
-              text={type === NoteType.preview ? "Cancel" : "Discard"}
-            />
-            <Button
-              callback={() => actionOnConfirm(getValues())}
-              type={ButtonType.regular}
-              text={type === NoteType.preview ? "Edit" : "Save"}
-            />
           </div>
         </div>
-        </div>
       </div>
-    </div>
     </>
   );
 }

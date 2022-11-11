@@ -3,16 +3,16 @@ import Alert from "./Alert";
 import Note, { NoteType } from "./Note";
 import { NoteT, NoteContext, LabelContext } from "../public/ContextProvider";
 
-enum alert{
+enum alert {
   none,
   deleteAlert,
-  discardAlert
+  discardAlert,
 }
 function NotePreview({
   callback,
   thisNote,
 }: {
-  callback:()=>void;
+  callback: () => void;
   thisNote: NoteT;
 }) {
   const [openAlert, setOpenAlert] = useState(alert.none);
@@ -21,13 +21,33 @@ function NotePreview({
   const { ctLabels, setCtLabels } = useContext(LabelContext);
 
   //ctNotes will always exist if the user gets to this component
-  function deleteExcessLabels(){
-    if(thisNote.label)
-      if(!ctNotes!.some(obj => obj.label === thisNote.label && obj.id !== thisNote.id)) 
+  //Add the label to the context if it isn't already there
+  function addLabelToContext(label: string) {
+    if (label == "") return undefined;
+    else if (!ctLabels!.includes(label)) {
+      setCtLabels(ctLabels!.concat(label));
+    }
+    return label;
+  }
+
+  function deleteExcessLabels() {
+    if (thisNote.label)
+      if (
+        !ctNotes!.some(
+          (obj) => obj.label === thisNote.label && obj.id !== thisNote.id
+        )
+      )
         setCtLabels(
           ctLabels!.filter((label: string) => {
-            return label !== thisNote.label
-        }))
+            return label !== thisNote.label;
+          })
+        );
+  }
+
+  function findIndexInArray() {
+    const noteInArray = ctNotes!.find((obj: NoteT) => obj.id === thisNote.id);
+
+    return ctNotes!.indexOf(noteInArray!);
   }
 
   function onDeleteNote() {
@@ -38,46 +58,31 @@ function NotePreview({
     );
 
     //Deleting the label if there are no more notes with that label
-    deleteExcessLabels();    
+    deleteExcessLabels();
     callback();
 
     setOpenAlert(alert.none);
   }
 
   function onDiscardChanges() {
+    thisNote = ctNotes![thisNote.id];
     setOpenAlert(alert.none);
     setIsEditing(false);
   }
 
-  function findIndexInArray() {
-    const noteInArray = ctNotes!.find((obj: NoteT) => obj.id === thisNote.id);
-
-    return ctNotes!.indexOf(noteInArray!);
-  }
-
-  //Add the label to the context if it isn't already there
-  function addLabelToContext(label:string){
-    if(label == "") return undefined;
-    else if(!ctLabels!.includes(label)){
-      setCtLabels(ctLabels!.concat(label));
-    }
-    return label;
-
-  }
-
-  function onConfirm(val: NoteT) {
+  function onSaveChanges(val: NoteT) {
     //Replace the value in notes
     const indexInArray = findIndexInArray();
     val.id = thisNote.id;
     const tempState = ctNotes!.slice();
 
-    if(val.label && val.label !== thisNote.label) val.label = addLabelToContext(val.label);
+    if (val.label && val.label !== thisNote.label)
+      val.label = addLabelToContext(val.label);
 
     deleteExcessLabels();
 
     tempState.splice(indexInArray, 1, val);
     setCtNotes(tempState);
-    
 
     setIsEditing(false);
   }
@@ -87,8 +92,8 @@ function NotePreview({
       {isEditing ? (
         <Note
           type={NoteType.editable}
-          actionOnCancel={()=>setOpenAlert(alert.discardAlert)}
-          actionOnConfirm={onConfirm}
+          actionOnCancel={() => setOpenAlert(alert.discardAlert)}
+          actionOnConfirm={onSaveChanges}
           noteInfo={thisNote}
         />
       ) : (
