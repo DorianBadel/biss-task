@@ -9,14 +9,6 @@ function NoteDisplay() {
   const { ctNotes } = useContext(NoteContext);
   const { ctLabels } = useContext(LabelContext);
 
-  function getLabels() {
-    let labels: string[] = [];
-    ctNotes?.forEach((note: NoteT) => {
-      if (note.label) if (!labels.includes(note.label)) labels.push(note.label);
-    });
-    console.log(labels);
-  }
-
   if (!ctNotes || ctNotes.length === 0) {
     return (
       <div className="flex inset-0 justify-center items-center h-72 overflow-hidden">

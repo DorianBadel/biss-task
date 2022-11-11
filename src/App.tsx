@@ -1,6 +1,5 @@
 import React from "react";
 import Heading from "./components/Heading";
-import LabelSelector from "./components/LabelSelector";
 import NoteDisplay from "./components/NoteDisplay";
 import { LabelProvider, NoteProvider } from "./public/ContextProvider";
 

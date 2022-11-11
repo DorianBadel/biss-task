@@ -23,7 +23,7 @@ function NotePreview({
   //ctNotes will always exist if the user gets to this component
   //Add the label to the context if it isn't already there
   function addLabelToContext(label: string) {
-    if (label == "") return undefined;
+    if (label === "") return undefined;
     else if (!ctLabels!.includes(label)) {
       setCtLabels(ctLabels!.concat(label));
     }
@@ -118,7 +118,7 @@ function NotePreview({
         />
       )}
 
-      {openAlert == alert.deleteAlert && (
+      {openAlert === alert.deleteAlert && (
         <Alert
           positiveClick={onDeleteNote}
           negativeClick={() => setOpenAlert(alert.none)}
@@ -128,7 +128,7 @@ function NotePreview({
         />
       )}
 
-      {openAlert == alert.discardAlert && (
+      {openAlert === alert.discardAlert && (
         <Alert
           positiveClick={onDiscardChanges}
           negativeClick={() => setOpenAlert(alert.none)}

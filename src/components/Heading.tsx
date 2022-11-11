@@ -22,7 +22,7 @@ function Heading() {
   }
 
   function addLabelToContext(label: string) {
-    if (label == "") return undefined;
+    if (label === "") return undefined;
     else if (!ctLabels!.includes(label)) {
       setCtLabels(ctLabels!.concat(label));
     }
