@@ -30,18 +30,30 @@ function NotePreview({
     return label;
   }
 
-  function deleteExcessLabels() {
+  function deleteExcessLabels(checkIfLast?: boolean) {
+    if (checkIfLast === undefined) checkIfLast = true;
+
     if (thisNote.label)
-      if (
-        !ctNotes!.some(
-          (obj) => obj.label === thisNote.label && obj.id !== thisNote.id
-        )
-      )
-        setCtLabels(
-          ctLabels!.filter((label: string) => {
-            return label !== thisNote.label;
-          })
-        );
+      if (checkIfLast)
+        if (
+          !ctNotes!.some(
+            (obj) => obj.label === thisNote.label && obj.id !== thisNote.id
+          )
+        ) {
+          setCtLabels(
+            ctLabels!.filter((label: string) => {
+              return label !== thisNote.label;
+            })
+          );
+        } else {
+          if (!ctNotes!.some((obj) => obj.label === thisNote.label)) {
+            setCtLabels(
+              ctLabels!.filter((label: string) => {
+                return label !== thisNote.label;
+              })
+            );
+          }
+        }
   }
 
   function findIndexInArray() {
@@ -79,7 +91,7 @@ function NotePreview({
     if (val.label && val.label !== thisNote.label)
       val.label = addLabelToContext(val.label);
 
-    deleteExcessLabels();
+    deleteExcessLabels(false);
 
     tempState.splice(indexInArray, 1, val);
     setCtNotes(tempState);
