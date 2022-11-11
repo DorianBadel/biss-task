@@ -1,6 +1,6 @@
 # The Notes app
 
-To see how this project works, visit [https://biss-task.vercel.app/] this link.
+To see how this project works, visit [this link](https://biss-task.vercel.app/) .
 If you want to see the code and change things around feel free to follow these steps:
 
 ## Cloning the repository
