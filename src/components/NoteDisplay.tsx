@@ -1,19 +1,50 @@
 import React, { useContext } from "react";
-import { Note, NotesContext } from "../App";
 import NoteCard from "./NoteCard";
+import { NoteContext, NoteT } from "../util/NoteProvider";
+import CategoryLabel from "./CategoryLabel";
+import { useLabels } from "../util/useLabels";
 
 function NoteDisplay() {
-  const [context] = useContext(NotesContext);
-  return (
-    <div className="mx-auto max-w-2xl py-10 px-4 sm:py-16 sm:px-6 lg:max-w-7xl lg:px-8">
-      <div className="grid grid-cols-1 gap-y-5 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
-        {context!.map(
-          (note: Note) =>
-            note.id !== 0 && <NoteCard key={note.id} note={note} />
-        )}
-      </div>
-    </div>
-  );
+	const { ctNotes } = useContext(NoteContext);
+	const ctLabels = useLabels();
+
+	if (!ctNotes || ctNotes.length === 0) {
+		return (
+			<div className="flex inset-0 justify-center items-center h-72 overflow-hidden">
+				<h3 className={"noteLgText" + " opacity-60 select-none"}>
+					You seem to have no notes, add one on the top right !
+				</h3>
+			</div>
+		);
+	} else {
+		return (
+			<div className={"noteGridContainer"}>
+				<div className={"noteGrid"}>
+					{ctNotes
+						.filter((note: NoteT) => !note.label)
+						.map((note: NoteT) => (
+							<NoteCard key={note.id} note={note} />
+						))}
+				</div>
+				{ctLabels &&
+					ctLabels.map((label: string, index) => {
+						return (
+							<div key={index}>
+								<CategoryLabel title={label} />
+
+								<div className={"noteGrid"}>
+									{ctNotes
+										.filter((note: NoteT) => note.label === label)
+										.map((note: NoteT) => {
+											return <NoteCard key={note.id} note={note} />;
+										})}
+								</div>
+							</div>
+						);
+					})}
+			</div>
+		);
+	}
 }
 
 export default NoteDisplay;

@@ -1,163 +1,223 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Button, { ButtonType } from "./Button";
-import { Note as NoteT } from "../App";
 import ReactMarkdown from "react-markdown";
+import { NoteContext, NoteT } from "../util/NoteProvider";
+import remarkGfm from "remark-gfm";
+import Label from "./inputComponents/Label";
+import CloseButton from "./CloseButton";
+import Input from "./inputComponents/Input";
+import TextArea from "./inputComponents/TextArea";
+import LabelSelector from "./inputComponents/LabelSelector";
+import Alert from "./Alert";
 
 export enum NoteType {
-  editable,
-  preview,
+	editable,
+	preview,
 }
 
-//TODO: make actionOnCancel trigger call actionOnCancel(true) if a change has been made
-//Make sure its not overwriten in the component call
+enum alert {
+	none,
+	deleteAlert,
+	discardAlert,
+}
+
 function Note({
-  type,
-  actionOnCancel,
-  actionOnConfirm,
-  actionOnDelete,
-  noteInfo,
+	type,
+	actionOnCancel,
+	actionOnConfirm,
+	noteInfo,
 }: {
-  type: NoteType;
-  actionOnCancel: React.Dispatch<React.SetStateAction<boolean>>;
-  actionOnConfirm: (arg: NoteT) => void;
-  actionOnDelete?: React.Dispatch<React.SetStateAction<boolean>>;
-  noteInfo?: NoteT;
+	type: NoteType;
+	actionOnCancel: () => void;
+	actionOnConfirm: (arg: NoteT) => void;
+	noteInfo?: NoteT;
 }) {
-  const [inputValues, setInputValues] = useState<NoteT>({
-    id: noteInfo ? noteInfo.id : 0,
-    title: noteInfo ? noteInfo.title : "Note title",
-    text: noteInfo
-      ? noteInfo.text
-      : "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veritatis unde incidunt numquam illum suscipit minima in, nobis, molestiae qui, adipisci pariatur? Aliquid sunt doloribus quasi quos labore et magnam quam.",
-  });
+	const [openAlert, setOpenAlert] = useState(alert.none);
+	const { ctNotes, setCtNotes } = useContext(NoteContext);
 
-  function handleChange(
-    event:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<HTMLTextAreaElement>
-  ) {
-    let newValue = inputValues;
-    event.preventDefault();
-    event.target.name === "noteTitle"
-      ? (newValue.title = event.target.value)
-      : (newValue.text = event.target.value);
-    setInputValues(newValue);
-  }
+	function onDeleteNote() {
+		if (noteInfo)
+			setCtNotes(
+				ctNotes!.filter((note: NoteT) => {
+					return note.id !== noteInfo.id;
+				})
+			);
 
-  function GetValues(): NoteT {
-    return inputValues;
-  }
+		actionOnCancel();
 
-  return (
-    <>
-      <div className="bg-zinc-200 bg-opacity-80 fixed inset-0 z-50">
-        <div className="flex pt-20 px-20 justify-center items-center">
-          <div className="flex-col min-w-full justify-center bg-white py-10 px-12 rounded-md ">
-            <form>
-              <div className="flex justify-between">
-                <label
-                  htmlFor="noteTitle"
-                  className="text-zinc-600 mb-2 text-lg font-bold"
-                >
-                  {type === NoteType.editable
-                    ? "Note title"
-                    : inputValues.title}
-                </label>
-                <div
-                  className="text-primary"
-                  onClick={() => actionOnCancel(false)}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-6 h-6 hover:stroke-secondary-hover hover:cursor-pointer transition"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </div>
-              </div>
+		setOpenAlert(alert.none);
+	}
 
-              {type === NoteType.editable ? (
-                <div>
-                  <input
-                    type="text"
-                    id="noteTitle"
-                    placeholder={inputValues.title}
-                    name="noteTitle"
-                    onChange={handleChange}
-                    defaultValue={inputValues.title}
-                    className=" my-4 form-control block w-full px-3 py-1.5 text-base font-norma text-gray-70 bg-white bg-clip-paddin border border-solid border-gray-30 rounde transitio ease-in-ou m- focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none"
-                  />
+	function onDiscardChanges() {
+		setOpenAlert(alert.none);
+		actionOnCancel();
+	}
 
-                  <label
-                    htmlFor="noteText"
-                    className="text-zinc-600 mb-2 text-lg font-bold block"
-                  >
-                    Note text
-                  </label>
-                  <textarea
-                    id="noteText"
-                    name="noteText"
-                    onChange={(e) => handleChange(e)}
-                    placeholder={inputValues.text}
-                    rows={10}
-                    defaultValue={inputValues.text}
-                    className="form-control block w-full px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none"
-                  />
-                </div>
-              ) : (
-                <ReactMarkdown
-                  className="overflow-auto max-h-72"
-                  children={inputValues.text}
-                />
-              )}
-            </form>
+	//Variables
+	//name props of inputs
+	const textInputNameValue = "noteText";
+	const titleInputNameValue = "noteTitle";
+	const labelInputNameValue = "noteLabel";
 
-            <div className="flex justify-between p-2">
-              {type === NoteType.preview ? (
-                actionOnDelete ? (
-                  <Button
-                    callback={() => actionOnDelete(true)}
-                    type={ButtonType.border}
-                    text="Delete"
-                  />
-                ) : (
-                  <Button
-                    callback={() =>
-                      console.log("You forgot to add actionOnDelete")
-                    }
-                    type={ButtonType.border}
-                    text="ADD actionOnDelete"
-                  />
-                )
-              ) : (
-                <div></div>
-              )}
-              <div className="flex float-right gap-3">
-                <Button
-                  callback={() => actionOnCancel(false)}
-                  type={ButtonType.border}
-                  text={type === NoteType.preview ? "Cancel" : "Discard"}
-                />
-                <Button
-                  callback={() => actionOnConfirm(GetValues())}
-                  type={ButtonType.regular}
-                  text={type === NoteType.preview ? "Edit" : "Save"}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
+	//Default values
+	const defaultTitle = "Note title";
+	const defaultTitleTitle = "Note title*";
+	const defaultTextTitle = "Note text*";
+	const defaultText = "Placeholder text, write something of note in your note";
+	const defaultLabel = "Select label";
+	const labelBlankValue = "Without label";
+
+	const [inputValues, setInputValues] = useState<NoteT>({
+		id: noteInfo?.id || 0,
+		title: noteInfo?.title || defaultTitle,
+		text: noteInfo?.text || defaultText,
+		label: noteInfo?.label || undefined,
+	});
+	const previewValues = { title: noteInfo?.title, text: noteInfo?.text };
+
+	function handleChange(
+		event:
+			| React.ChangeEvent<HTMLInputElement>
+			| React.ChangeEvent<HTMLTextAreaElement>
+	) {
+		let newValue = inputValues;
+		event.preventDefault();
+		event.target.name === titleInputNameValue
+			? (newValue.title = event.target.value)
+			: event.target.name === textInputNameValue
+			? (newValue.text = event.target.value)
+			: event.target.value === labelBlankValue
+			? (newValue.label = "")
+			: (newValue.label = event.target.value);
+		setInputValues(newValue);
+	}
+
+	function getValues(): NoteT {
+		//In case the user left something blank
+		if (inputValues.title === "") inputValues.title = defaultTitle;
+		if (inputValues.text === "") inputValues.text = defaultText;
+		return inputValues;
+	}
+
+	return (
+		<>
+			<div className="noteModalBackground">
+				<div
+					className="noteModalCenter"
+					onClick={
+						type === NoteType.editable
+							? () => setOpenAlert(alert.discardAlert)
+							: actionOnCancel
+					}
+				>
+					<div
+						className="noteModalContainer max-w-2x1"
+						onClick={(e) => {
+							e.stopPropagation();
+						}}
+					>
+						<form>
+							<div className="flex justify-between pb-3">
+								<Label name={titleInputNameValue}>
+									{type === NoteType.editable
+										? defaultTitleTitle
+										: previewValues.title || ""}
+								</Label>
+								<CloseButton
+									action={
+										type === NoteType.editable
+											? () => setOpenAlert(alert.discardAlert)
+											: actionOnCancel
+									}
+								/>
+							</div>
+
+							{type === NoteType.editable ? (
+								<div>
+									<Input
+										name={titleInputNameValue}
+										text={inputValues.title}
+										handleChange={handleChange}
+									/>
+
+									<div className="py-3">
+										<LabelSelector
+											name={labelInputNameValue}
+											defaultText={
+												inputValues.label ? inputValues.label : defaultLabel
+											}
+											handleChange={handleChange}
+										/>
+									</div>
+
+									<Label name={textInputNameValue}>{defaultTextTitle}</Label>
+									<TextArea
+										name={textInputNameValue}
+										text={inputValues.text}
+										handleChange={handleChange}
+									/>
+								</div>
+							) : (
+								<ReactMarkdown
+									className="overflow-auto max-h-96"
+									remarkPlugins={[remarkGfm]}
+									children={previewValues.text || ""}
+								/>
+							)}
+						</form>
+
+						<div className="flex justify-between p-2 pt-10">
+							{type === NoteType.preview ? (
+								<Button
+									callback={() => setOpenAlert(alert.deleteAlert)}
+									type={ButtonType.border}
+									text="Delete"
+								/>
+							) : (
+								<div></div>
+							)}
+							<div className="flex float-right gap-3">
+								<Button
+									callback={
+										type === NoteType.preview
+											? actionOnCancel
+											: () => setOpenAlert(alert.discardAlert)
+									}
+									type={ButtonType.border}
+									text={type === NoteType.preview ? "Cancel" : "Discard"}
+								/>
+								<Button
+									callback={() => actionOnConfirm(getValues())}
+									type={ButtonType.regular}
+									text={type === NoteType.preview ? "Edit" : "Save"}
+								/>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			{openAlert === alert.deleteAlert && (
+				<Alert
+					positiveClick={onDeleteNote}
+					negativeClick={() => setOpenAlert(alert.none)}
+					message="Are you sure you want to delete this note?"
+					positiveOption="Yes, delete"
+					negativeOption="Cancel"
+				/>
+			)}
+
+			{openAlert === alert.discardAlert && (
+				<Alert
+					positiveClick={onDiscardChanges}
+					negativeClick={() => setOpenAlert(alert.none)}
+					message="Are you sure you want to discard your changes?"
+					positiveOption="Yes, discard"
+					negativeOption="Continue editing"
+				/>
+			)}
+		</>
+	);
 }
 
 export default Note;

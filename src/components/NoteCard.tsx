@@ -1,28 +1,29 @@
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import { Note } from "../App";
 import NotePreview from "./NotePreview";
+import { NoteT } from "../util/NoteProvider";
 
-const forbid = ["link"];
-function NoteCard({ note }: { note: Note }) {
-  const [isOpen, setIsOpen] = useState(false);
-  return (
-    <>
-      {isOpen && (
-        <NotePreview thisNote={note} callback={() => setIsOpen(false)} />
-      )}
-      <div
-        key={note.id}
-        onClick={() => setIsOpen(true)}
-        className="group bg-secondary-regular rounded-lg p-5 shadow-md hover:bg-secondary-hover hover:cursor-pointer"
-      >
-        <div className="aspect-w-1 aspect-h-1 w-full overflow-hidden max-h-40 rounded-lg  xl:aspect-w-7 xl:aspect-h-8">
-          <p className="mt-1 text-lg font-medium text-gray-900">{note.title}</p>
-          <ReactMarkdown children={note.text} disallowedElements={forbid} />
-        </div>
-      </div>
-    </>
-  );
+import remarkGfm from "remark-gfm";
+
+function NoteCard({ note }: { note: NoteT }) {
+	const [isOpen, setIsOpen] = useState(false);
+	return (
+		<>
+			{isOpen && (
+				<NotePreview thisNote={note} callback={() => setIsOpen(false)} />
+			)}
+			<div
+				key={note.id}
+				onClick={() => setIsOpen(true)}
+				className="noteCardContainer"
+			>
+				<div className="noteCard xl:aspect-w-7 xl:aspect-h-8">
+					<p className="noteXlText mb-2">{note.title}</p>
+					<ReactMarkdown remarkPlugins={[remarkGfm]} children={note.text} />
+				</div>
+			</div>
+		</>
+	);
 }
 
 export default NoteCard;

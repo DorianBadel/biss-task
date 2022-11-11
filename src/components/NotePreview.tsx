@@ -1,104 +1,59 @@
 import React, { useContext, useState } from "react";
-import { Note as NoteT, NotesContext } from "../App";
 import Alert from "./Alert";
 import Note, { NoteType } from "./Note";
+import { NoteT, NoteContext } from "../util/NoteProvider";
+// import { LabelContext } from "../util/LabelProvider";
 
 function NotePreview({
-  callback,
-  thisNote,
+	callback,
+	thisNote,
 }: {
-  callback: React.Dispatch<React.SetStateAction<boolean>>;
-  thisNote: NoteT;
+	callback: () => void;
+	thisNote: NoteT;
 }) {
-  const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const [isEditAlertOpen, setIsEditAlertOpen] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
-  const [cont, setCont] = useContext(NotesContext);
+	const [isEditing, setIsEditing] = useState(false);
+	const { ctNotes, setCtNotes } = useContext(NoteContext);
 
-  function onDeleteNote() {
-    setCont(
-      cont.filter((note: NoteT) => {
-        return note.id !== thisNote.id;
-      })
-    );
-    setIsAlertOpen(false);
-    callback(false);
-  }
+	function findIndexInArray() {
+		const noteInArray = ctNotes!.find((obj: NoteT) => obj.id === thisNote.id);
 
-  function onDiscardChanges() {
-    setIsEditAlertOpen(false);
-    setIsEditing(false);
-  }
+		return ctNotes!.indexOf(noteInArray!);
+	}
 
-  function findInArray() {
-    return cont.indexOf(cont.find((obj: NoteT) => obj.id === thisNote.id));
-  }
+	function onSaveChanges(val: NoteT) {
+		const indexInArray = findIndexInArray();
+		val.id = thisNote.id; //
+		const tempState = ctNotes!.slice();
 
-  function onConfirm(val: NoteT) {
-    const indexInArray = findInArray();
-    val.id = thisNote.id;
-    const fruits = cont.slice();
-    fruits.splice(indexInArray, 1, val);
-    setCont(fruits);
+		if (val.label) {
+			val.label = val.label.toUpperCase();
+		}
 
-    // setCont(
-    //   cont.filter((note: NoteT) => {
-    //     if(note.id === thisNote.id) note = val
-    //     return true;
-    //   })
-    // );
+		tempState.splice(indexInArray, 1, val);
+		setCtNotes(tempState);
 
-    // setCont(
-    //   cont
-    //     .filter((note: NoteT) => {
-    //       return note.id !== thisNote.id;
-    //     })
-    //     .concat(val)
-    // );
+		setIsEditing(false);
+	}
 
-    setIsEditing(false);
-  }
-
-  return (
-    <>
-      {isEditing ? (
-        <Note
-          type={NoteType.editable}
-          actionOnCancel={() => setIsEditAlertOpen(true)}
-          actionOnConfirm={onConfirm}
-          noteInfo={thisNote}
-        />
-      ) : (
-        <Note
-          type={NoteType.preview}
-          actionOnCancel={callback}
-          actionOnConfirm={() => setIsEditing(true)}
-          actionOnDelete={() => setIsAlertOpen(true)}
-          noteInfo={thisNote}
-        />
-      )}
-
-      {isAlertOpen && (
-        <Alert
-          positiveClick={onDeleteNote}
-          negativeClick={() => setIsAlertOpen(false)}
-          message="Are you sure you want to delete this note?"
-          positiveOption="Yes, delete"
-          negativeOption="Cancel"
-        />
-      )}
-
-      {isEditAlertOpen && (
-        <Alert
-          positiveClick={onDiscardChanges}
-          negativeClick={() => setIsEditAlertOpen(false)}
-          message="Are you sure you want to discard your changes?"
-          positiveOption="Yes, discard"
-          negativeOption="Continue editing"
-        />
-      )}
-    </>
-  );
+	return (
+		<>
+			{isEditing ? (
+				<Note
+					type={NoteType.editable}
+					actionOnCancel={() => setIsEditing(false)}
+					actionOnConfirm={onSaveChanges}
+					noteInfo={thisNote}
+				/>
+			) : (
+				<Note
+					type={NoteType.preview}
+					actionOnCancel={callback}
+					actionOnConfirm={() => setIsEditing(true)}
+					noteInfo={thisNote}
+				/>
+			)}
+		</>
+	);
 }
 
 export default NotePreview;

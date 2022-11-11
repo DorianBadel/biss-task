@@ -2,16 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@layer components {
+	.alertCenter {
+		@apply flex pt-20 h-screen justify-center items-center;
+	}
+	.alertContainer {
+		@apply flex-col justify-center bg-white py-10 px-12 rounded-md;
+	}
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+	.noteGridContainer {
+		@apply mx-auto max-w-2xl py-10 px-8 sm:py-16 sm:px-12 md:max-w-7xl md:px-16 lg:px-20;
+	}
+	.noteGrid {
+		@apply grid grid-cols-1 gap-y-5 gap-x-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-x-6;
+	}
+
+	.noteCardContainer {
+		@apply rounded-lg p-5 shadow-lg border border-primary transition hover:shadow-xl hover:border-secondary-hover hover:bg-orange-50 hover:cursor-pointer;
+	}
+
+	.noteCard {
+		@apply w-full overflow-hidden max-h-80 rounded-lg;
+	}
+
+	.noteModalBackground {
+		@apply bg-zinc-200 bg-opacity-80 fixed inset-0 z-50;
+	}
+	.noteModalCenter {
+		@apply flex h-screen py-10 px-10;
+	}
+	.noteModalContainer {
+		@apply flex-col min-w-full h-max justify-center bg-white py-8 px-8 sm:px-12 sm:py-10 rounded-md;
+	}
+
+	.noteMdText {
+		@apply text-gray-900 mb-2 text-md block;
+	}
+	.noteLgText {
+		@apply text-zinc-600 mb-2 text-lg font-bold block;
+	}
+	.noteXlText {
+		@apply mt-1 text-xl font-medium text-gray-900 font-bold;
+	}
+	.noteFormInput {
+		@apply block w-full max-h-80 px-3 py-1.5 text-base font-normal text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-primary focus:outline-none;
+	}
+	.noteIcon {
+		@apply w-6 h-6 hover:stroke-secondary-hover hover:cursor-pointer transition;
+	}
+
+	.regularButton {
+		@apply transition bg-primary hover:bg-secondary-regular text-white px-3 py-1 font-medium rounded-md shadow;
+	}
+	.borderButton {
+		@apply transition border border-primary hover:border-secondary-regular hover:shadow-xl text-primary px-3 py-1 font-medium rounded-md shadow;
+	}
+
+	.labelTitleSm {
+		@apply text-lg bg-primary text-white px-3 py-1 font-medium rounded-md shadow;
+	}
+
+	.labelTitle {
+		@apply text-lg bg-primary text-white mx-3 my-1 px-2 font-medium rounded-md shadow w-fit;
+	}
+
+	.selectorEnabled {
+		@apply inline p-1 text-sm text-gray-900 rounded-lg border border-primary focus:ring-primary focus:border-primary;
+	}
 }
