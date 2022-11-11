@@ -1,19 +1,17 @@
 import React from "react";
 import Heading from "./components/Heading";
 import NoteDisplay from "./components/NoteDisplay";
-import { LabelProvider, NoteProvider } from "./public/ContextProvider";
+import { NoteProvider } from "./util/NoteProvider";
 
 function App() {
-  return (
-    <div className="App">
-      <NoteProvider>
-        <LabelProvider>
-          <Heading />
-          <NoteDisplay />
-        </LabelProvider>
-      </NoteProvider>
-    </div>
-  );
+	return (
+		<div className="App">
+			<NoteProvider>
+				<Heading />
+				<NoteDisplay />
+			</NoteProvider>
+		</div>
+	);
 }
 
 export default App;

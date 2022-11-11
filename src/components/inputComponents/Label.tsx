@@ -1,14 +1,11 @@
-import React from 'react'
-import * as tw from "../../public/themes"
+import React from "react";
 
-
-function Label({children,name}:{children:string,name:string}) {
-  return (
-    <label htmlFor={name}
-      className=  {tw.noteLgText}>
-      {children}
-    </label>
-  )
+function Label({ children, name }: { children: string; name: string }) {
+	return (
+		<label htmlFor={name} className="noteLgText">
+			{children}
+		</label>
+	);
 }
 
-export default Label
+export default Label;
